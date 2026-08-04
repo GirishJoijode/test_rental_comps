@@ -12,6 +12,13 @@ export const CHART = {
   axis: '#d6d9e2',
   axisText: '#6b7280',
   categoryText: '#25273A',
+  // Distinct solid colours for Summary unit-type series (consistent across charts).
+  units: {
+    Studio: '#8FA3B8', // cool steel
+    Bed1: '#5A7A9A', // muted institutional blue
+    Bed2: '#25273A', // Savills navy
+    Bed3: '#B8973F', // muted gold (complements yellow accent)
+  },
 }
 
 // Shared tooltip styling for recharts.

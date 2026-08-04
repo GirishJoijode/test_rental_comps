@@ -15,6 +15,12 @@ export const UNIT_DEFS = [
   { key: 'Bed3', label: '3 Bed', rent: 'Bed3_Rent', psf: 'Bed3_psf' },
 ]
 
+// Toggle options for Analysis: Summary sits first, then the four unit types.
+export const UNIT_TOGGLE_OPTIONS = [
+  { key: 'Summary', label: 'Summary' },
+  ...UNIT_DEFS,
+]
+
 // Summary statistics shown in the dashboard KPI cards.
 export function buildSummary(records) {
   const schemes = new Set()
@@ -52,6 +58,83 @@ export function averageByGroupForField(records, groupField, valueField, { round 
     rows.push({ name, value: Math.round((g.sum / g.n) * factor) / factor, count: g.n })
   }
   return rows.sort((a, b) => b.value - a.value)
+}
+
+// Overall averages across the whole dataset — one bar per unit type.
+// Returns [{ name, key, value, count }] in Studio → 3 Bed order. Blank/zero
+// ignored independently per unit type.
+export function averageOverallByUnits(records, metric = 'rent', { round = 0 } = {}) {
+  const factor = 10 ** round
+  const rows = []
+  for (const u of UNIT_DEFS) {
+    const field = metric === 'psf' ? u.psf : u.rent
+    let sum = 0
+    let n = 0
+    for (const rec of records) {
+      const v = rec[field]
+      if (isBlank(v)) continue
+      const num = Number(v)
+      if (!Number.isFinite(num)) continue
+      sum += num
+      n += 1
+    }
+    if (n === 0) continue
+    rows.push({
+      name: u.label,
+      key: u.key,
+      value: Math.round((sum / n) * factor) / factor,
+      count: n,
+    })
+  }
+  return rows
+}
+
+// Per-group averages for ALL unit types (Summary regional charts).
+// Returns [{ name, Studio, Bed1, Bed2, Bed3, Studio_count, ... }] sorted by the
+// mean of available unit averages. Missing unit types stay undefined.
+export function averageByGroupForUnits(records, groupField, metric = 'rent', { round = 0 } = {}) {
+  const groups = new Map()
+  for (const rec of records) {
+    const key = isBlank(rec[groupField]) ? '' : String(rec[groupField]).trim()
+    if (!key) continue
+    if (!groups.has(key)) {
+      const blank = {}
+      for (const u of UNIT_DEFS) blank[u.key] = { sum: 0, n: 0 }
+      groups.set(key, blank)
+    }
+    const g = groups.get(key)
+    for (const u of UNIT_DEFS) {
+      const field = metric === 'psf' ? u.psf : u.rent
+      const v = rec[field]
+      if (isBlank(v)) continue
+      const num = Number(v)
+      if (!Number.isFinite(num)) continue
+      g[u.key].sum += num
+      g[u.key].n += 1
+    }
+  }
+
+  const factor = 10 ** round
+  const rows = []
+  for (const [name, g] of groups.entries()) {
+    const row = { name }
+    let rankSum = 0
+    let rankN = 0
+    let any = false
+    for (const u of UNIT_DEFS) {
+      if (g[u.key].n === 0) continue
+      any = true
+      const avg = Math.round((g[u.key].sum / g[u.key].n) * factor) / factor
+      row[u.key] = avg
+      row[`${u.key}_count`] = g[u.key].n
+      rankSum += avg
+      rankN += 1
+    }
+    if (!any) continue
+    row._rank = rankN ? rankSum / rankN : 0
+    rows.push(row)
+  }
+  return rows.sort((a, b) => b._rank - a._rank)
 }
 
 // Average occupancy split by stabilisation status. Records with unknown
