@@ -4,19 +4,11 @@ import {
   formatBool,
   formatNumber,
   formatPercent,
-  formatPsf,
-  formatRent,
   isBlank,
 } from '../../utils/formatters'
 
 function formatCell(col, value) {
   switch (col.type) {
-    case 'rent':
-      return formatRent(value)
-    case 'psf':
-      return formatPsf(value)
-    case 'size':
-      return isBlank(value) ? '' : formatNumber(Math.round(value))
     case 'percent':
       return formatPercent(value)
     case 'number':
@@ -29,7 +21,7 @@ function formatCell(col, value) {
 }
 
 // Numeric column types sort numerically; everything else sorts as text.
-const NUMERIC = new Set(['rent', 'psf', 'size', 'percent', 'number'])
+const NUMERIC = new Set(['percent', 'number'])
 
 function compare(a, b, col) {
   const va = a[col.key]

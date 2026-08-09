@@ -18,7 +18,11 @@ import {
 import { buildSummary } from './utils/summary'
 import { recordIdentity } from './utils/indexRecords'
 
-export default function OperationalCostsModule({ activeModuleId, onModuleChange }) {
+export default function OperationalCostsModule({
+  activeModuleId,
+  onModuleChange,
+  logoutControl,
+}) {
   const { status, records, indexes, error, reload } = useOperationalCosts({ enabled: true })
 
   const [filters, setFilters] = useState(EMPTY_FILTERS)
@@ -109,6 +113,7 @@ export default function OperationalCostsModule({ activeModuleId, onModuleChange 
         <div className="app-header__status">
           <span className="status-dot" aria-hidden="true" />
           {statusText}
+          {logoutControl}
         </div>
       </header>
 

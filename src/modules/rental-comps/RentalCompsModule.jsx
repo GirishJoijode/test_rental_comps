@@ -19,7 +19,11 @@ import { exportToXlsx } from '../../utils/exportXlsx'
 import ModuleSwitcher from '../ModuleSwitcher'
 import { rentalCompsMeta } from './meta'
 
-export default function RentalCompsModule({ activeModuleId, onModuleChange }) {
+export default function RentalCompsModule({
+  activeModuleId,
+  onModuleChange,
+  logoutControl,
+}) {
   const { status, records, error, reload } = useRentalComps()
 
   const [filters, setFilters] = useState(EMPTY_FILTERS)
@@ -36,25 +40,29 @@ export default function RentalCompsModule({ activeModuleId, onModuleChange }) {
     () => applyFilters(records, filters, search),
     [records, filters, search]
   )
-
   const rows = useMemo(() => latestPerScheme(filtered), [filtered])
   const summary = useMemo(() => buildSummary(filtered), [filtered])
 
   const isFiltering = search.trim() !== '' || hasAnyFilterSelection(filters)
 
-  const analysisRecords = useMemo(
-    () =>
-      selectedIds.size > 0 ? records.filter((r) => selectedIds.has(r.Id)) : filtered,
-    [records, filtered, selectedIds]
-  )
+  // Analysis-only derivation — skip work while Dashboard / Map are active.
+  const analysisRecords = useMemo(() => {
+    if (tab !== 'analysis') return null
+    return selectedIds.size > 0
+      ? records.filter((r) => selectedIds.has(r.Id))
+      : filtered
+  }, [tab, records, filtered, selectedIds])
+
   const analysisBasis =
-    selectedIds.size > 0
-      ? `Analysis based on ${analysisRecords.length.toLocaleString('en-GB')} selected record${
-          analysisRecords.length === 1 ? '' : 's'
-        }`
-      : isFiltering
-        ? 'Analysis based on filtered records'
-        : 'Analysis based on all records'
+    tab !== 'analysis'
+      ? ''
+      : selectedIds.size > 0
+        ? `Analysis based on ${analysisRecords.length.toLocaleString('en-GB')} selected record${
+            analysisRecords.length === 1 ? '' : 's'
+          }`
+        : isFiltering
+          ? 'Analysis based on filtered records'
+          : 'Analysis based on all records'
 
   const handleFilterChange = (key, value) =>
     setFilters((prev) => sanitizeFilters({ ...prev, [key]: value }))
@@ -114,6 +122,7 @@ export default function RentalCompsModule({ activeModuleId, onModuleChange }) {
         <div className="app-header__status">
           <span className="status-dot" aria-hidden="true" />
           {statusText}
+          {logoutControl}
         </div>
       </header>
 
@@ -151,7 +160,7 @@ export default function RentalCompsModule({ activeModuleId, onModuleChange }) {
           />
         )}
 
-        {status === 'ready' && tab === 'analysis' && (
+        {status === 'ready' && tab === 'analysis' && analysisRecords && (
           <AnalysisTab records={analysisRecords} basisLabel={analysisBasis} />
         )}
       </main>
