@@ -84,6 +84,161 @@ body {
   color: rgba(255, 255, 255, 0.65);
   font-size: 0.78rem;
 }
+
+/* ---- Module / database switcher ---- */
+.module-switcher {
+  position: relative;
+  flex: none;
+  z-index: 40;
+}
+.module-switcher__trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0.2rem 0.45rem 0.2rem 0.15rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.module-switcher__trigger:hover,
+.module-switcher.is-open .module-switcher__trigger {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.module-switcher__copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.module-switcher__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  line-height: 1.2;
+  color: #fff;
+}
+.module-switcher__subtitle {
+  margin: 0.1rem 0 0;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+.module-switcher__chevron {
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-left: 0.35rem;
+  border-right: 2px solid rgba(255, 255, 255, 0.7);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.7);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.15s;
+  flex: none;
+}
+.module-switcher.is-open .module-switcher__chevron {
+  transform: rotate(225deg) translateY(-1px);
+}
+.module-switcher__menu {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  left: 0;
+  min-width: min(22rem, calc(100vw - 2rem));
+  padding: 0.45rem;
+  background: #fff;
+  color: var(--navy);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(37, 39, 58, 0.18);
+}
+.module-switcher__menu-label {
+  margin: 0;
+  padding: 0.35rem 0.65rem 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+.module-switcher__option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0;
+  padding: 0.7rem 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.module-switcher__option:hover {
+  background: #f4f5f8;
+}
+.module-switcher__option.is-active {
+  background: rgba(255, 223, 0, 0.22);
+}
+.module-switcher__option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  flex: 1;
+}
+.module-switcher__option-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+.module-switcher__option-subtitle {
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.3;
+}
+.module-switcher__check {
+  width: 0.55rem;
+  height: 0.9rem;
+  border-right: 2.5px solid var(--navy);
+  border-bottom: 2.5px solid var(--navy);
+  transform: rotate(45deg) translateY(-1px);
+  flex: none;
+}
+
+/* ---- Module placeholders (future views) ---- */
+.module-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 2rem 1.25rem;
+}
+.module-placeholder__card {
+  max-width: 34rem;
+  padding: 1.75rem 1.8rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.module-placeholder__card h2 {
+  margin: 0 0 0.55rem;
+  font-size: 1.15rem;
+  color: var(--navy);
+}
+.module-placeholder__card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
 .app-header__status {
   margin-left: auto;
   display: flex;
@@ -169,6 +324,14 @@ body {
   flex: none;
   padding: 0.85rem 1rem 0.6rem;
   border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.panel__head-main {
+  min-width: 0;
+  flex: 1;
 }
 .panel__title {
   margin: 0;
@@ -1039,6 +1202,9 @@ body {
   grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem 1.5rem;
 }
+.location-meta {
+  margin-bottom: 0.85rem;
+}
 .info-row {
   display: flex;
   flex-direction: column;
@@ -1196,6 +1362,10 @@ body {
   .app-header {
     flex-wrap: wrap;
     gap: 0.75rem 1rem;
+  }
+  .module-switcher {
+    order: 1;
+    max-width: 100%;
   }
   .app-header__status {
     order: 3;
@@ -1439,7 +1609,8 @@ body {
   .app-header {
     gap: 0.6rem;
   }
-  .app-header h1 {
+  .app-header h1,
+  .module-switcher__title {
     font-size: 1.05rem;
   }
   .summary-grid {
@@ -1462,5 +1633,415 @@ body {
   .filters__buttons .btn {
     flex: 1 1 auto;
     justify-content: center;
+  }
+
+  .modal--opex {
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+  .metric-grid--opex {
+    grid-template-columns: 1fr 1fr;
+  }
+  .opex-breakdown__head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .opex-basis-toggle {
+    width: 100%;
+  }
+  .opex-basis-toggle__btn {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* ---- Operational Costs scheme link + detail ---- */
+.modal--opex {
+  max-width: min(1120px, calc(100vw - 2rem));
+  max-height: 92vh;
+  max-height: 92dvh;
+}
+
+.metric-grid--opex {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+.metric--emphasize {
+  background: #fff;
+  border-color: #d8dbe5;
+  box-shadow: inset 3px 0 0 var(--yellow);
+}
+.metric--emphasize .metric__value {
+  font-size: 1.2rem;
+  color: var(--navy);
+}
+
+.opex-breakdown__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.35rem;
+}
+.opex-breakdown__title {
+  margin-bottom: 0 !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  flex: 1;
+}
+.opex-breakdown__hint {
+  margin: 0 0 0.85rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.opex-basis-toggle {
+  display: inline-flex;
+  flex: none;
+  padding: 0.2rem;
+  gap: 0.15rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+.opex-basis-toggle--compact {
+  margin-bottom: 0.85rem;
+}
+.opex-basis-toggle__btn {
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.opex-basis-toggle__btn:hover:not(.is-active) {
+  color: var(--navy);
+  background: rgba(37, 39, 58, 0.05);
+}
+.opex-basis-toggle__btn.is-active {
+  background: var(--navy);
+  color: #fff;
+}
+
+.opex-bars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.opex-bars--compact {
+  gap: 0.55rem;
+}
+.opex-bars__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.28rem;
+}
+.opex-bars__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--navy);
+  min-width: 0;
+}
+.opex-bars__swatch {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 2px;
+  flex: none;
+}
+.opex-bars__value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--navy);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.opex-bars__track {
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #eef0f5;
+  overflow: hidden;
+}
+.opex-bars__fill {
+  height: 100%;
+  border-radius: inherit;
+  min-width: 0;
+  transition: width 0.2s ease;
+}
+
+.opex-details {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  padding: 0.15rem 0.9rem 0.9rem;
+}
+.opex-details__summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.75rem 0 0.35rem;
+}
+.opex-details__summary::-webkit-details-marker {
+  display: none;
+}
+.opex-details__summary::after {
+  content: '+';
+  float: right;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+.opex-details[open] .opex-details__summary::after {
+  content: '−';
+}
+.opex-details__body {
+  padding-top: 0.55rem;
+}
+
+.opex-comments {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 900px) {
+  .metric-grid--opex {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---- Operational Costs Analysis ---- */
+.opex-analysis-panel {
+  overflow: auto;
+}
+.opex-analysis-panel .analysis-grid {
+  flex: none;
+  height: auto;
+  grid-template-rows: none;
+  grid-auto-rows: minmax(300px, 34vh);
+}
+.opex-analysis-grid .col-span-6 {
+  grid-column: span 6;
+}
+.opex-analysis-block {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.opex-analysis-block__title {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.opex-analysis-panel .opex-analysis-block .analysis-grid {
+  flex: none;
+  height: auto;
+  min-height: 0;
+  grid-auto-rows: minmax(280px, 32vh);
+}
+.opex-core-kpis {
+  min-height: 0 !important;
+  height: auto !important;
+  grid-auto-rows: auto !important;
+}
+.opex-kpi-grid {
+  flex: none;
+  display: grid;
+  gap: 0.75rem;
+}
+.opex-kpi-grid--8,
+.opex-kpi-grid--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.opex-kpi-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.opex-kpi-card .summary-card__value {
+  font-size: 1.25rem;
+}
+.opex-kpi-card .summary-card__label {
+  font-size: 0.66rem;
+  line-height: 1.25;
+}
+.opex-summary-metrics {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+  align-content: center;
+  padding: 0.5rem 0.25rem;
+}
+.opex-summary-metric {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: inset 3px 0 0 var(--yellow);
+}
+.opex-summary-metric__value {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.opex-summary-metric__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  line-height: 1.3;
+}
+.opex-chart-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: none;
+}
+.opex-chart-sort__label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+.opex-chart-sort__select {
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--navy);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 0.28rem 0.45rem;
+  max-width: 10.5rem;
+}
+.opex-mini-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-content: start;
+}
+.opex-mini-kpi {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  position: relative;
+  overflow: hidden;
+}
+.opex-mini-kpi::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--yellow);
+}
+.opex-mini-kpi__value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--navy);
+  font-variant-numeric: tabular-nums;
+}
+.opex-mini-kpi__label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.3;
+}
+.opex-section-empty {
+  min-height: 160px;
+  grid-column: 1 / -1;
+}
+.opex-scatter-tooltip {
+  padding: 0.55rem 0.7rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--ink);
+  background: #fff;
+}
+.opex-scatter-tooltip strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--navy);
+}
+
+@media (max-width: 1200px) {
+  .opex-kpi-grid--8,
+  .opex-kpi-grid--4,
+  .opex-kpi-grid--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .opex-summary-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .opex-analysis-panel .analysis-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(280px, auto);
+  }
+  .opex-analysis-grid .col-span-3,
+  .opex-analysis-grid .col-span-6,
+  .opex-analysis-grid .col-span-2 {
+    grid-column: span 1;
+  }
+  .opex-kpi-grid--8,
+  .opex-kpi-grid--4,
+  .opex-kpi-grid--3 {
+    grid-template-columns: 1fr;
+  }
+  .opex-mini-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  .opex-summary-metrics {
+    grid-template-columns: 1fr;
+  }
+  .opex-analysis-panel .analysis-toolbar {
+    align-items: stretch;
+  }
+  .opex-analysis-panel .segmented {
+    flex-wrap: wrap;
   }
 }

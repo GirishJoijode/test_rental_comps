@@ -84,7 +84,7 @@ export default function MapView({ records, selectedIds, onToggleRow, onRowClick,
     () =>
       points.map(({ id, rec, lat, lng }) => {
         const selected = selectedIds.has(id)
-        const sub = [rec.Town, rec.Regional_Filter, rec.Date_Filter]
+        const sub = [rec.Town, rec.PostCode, rec.Regional_Filter, rec.Date_Filter]
           .filter(Boolean)
           .join(' · ')
         return (

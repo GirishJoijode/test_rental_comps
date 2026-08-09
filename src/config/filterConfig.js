@@ -11,6 +11,7 @@ export const FILTER_FIELDS = [
   { key: 'Date_Filter', label: 'Date' },
   { key: 'Regional_Filter', label: 'Region' },
   { key: 'Town', label: 'Town' },
+  { key: 'PostCode', label: 'Postcode' },
   {
     key: 'Sub_location_Filter',
     label: 'Sub location',
@@ -28,7 +29,7 @@ export const FILTER_FIELDS = [
 ]
 
 // Fields scanned by the free-text search box.
-export const SEARCH_FIELDS = ['Scheme', 'Town', 'Operator', 'Amenities', 'Comments']
+export const SEARCH_FIELDS = ['Scheme', 'Town', 'PostCode', 'Operator', 'Amenities', 'Comments']
 
 // Whether a filter field should be shown, given the current filter selections.
 export function isFilterVisible(field, filters) {

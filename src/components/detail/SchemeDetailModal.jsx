@@ -37,6 +37,7 @@ const SHOWN_KEYS = new Set([
   'Id',
   'Scheme',
   'Town',
+  'PostCode',
   'Regional_Filter',
   'Date_Filter',
   'Source',
@@ -146,7 +147,9 @@ export default function SchemeDetailModal({ record, allRecords, onClose }) {
           <div className="modal__heading">
             <h2 className="modal__title">{record.Scheme || 'Unnamed scheme'}</h2>
             <p className="modal__sub">
-              {[active.Town, active.Regional_Filter].filter(Boolean).join('  ·  ') || '—'}
+              {[active.Town, active.PostCode, active.Regional_Filter]
+                .filter(Boolean)
+                .join('  ·  ') || '—'}
             </p>
             <div className="modal__badges">
               {!isBlank(active.Source) && (
@@ -241,6 +244,11 @@ export default function SchemeDetailModal({ record, allRecords, onClose }) {
 
           <section className="modal__section">
             <h3 className="modal__section-title">Location</h3>
+            <div className="info-grid location-meta">
+              <InfoRow label="Town" value={dash(active.Town)} />
+              <InfoRow label="Postcode" value={dash(active.PostCode)} />
+              <InfoRow label="Region" value={dash(active.Regional_Filter)} />
+            </div>
             <SchemeMapPanel record={active} />
           </section>
 

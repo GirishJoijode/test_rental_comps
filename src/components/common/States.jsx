@@ -1,8 +1,8 @@
-export function Loading() {
+export function Loading({ message = 'Loading…' }) {
   return (
     <div className="state state--loading" role="status" aria-live="polite">
       <div className="spinner" aria-hidden="true" />
-      <p>Loading live rental comparables…</p>
+      <p>{message}</p>
     </div>
   )
 }

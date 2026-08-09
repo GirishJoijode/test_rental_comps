@@ -9,6 +9,7 @@ export const COLUMNS = [
   { key: 'Scheme', label: 'Scheme', type: 'text', sticky: true },
   { key: 'Date_Filter', label: 'Date', type: 'text' },
   { key: 'Town', label: 'Town', type: 'text' },
+  { key: 'PostCode', label: 'Postcode', type: 'text' },
   { key: 'Operator', label: 'Operator', type: 'text' },
   { key: 'Amenity_Grade', label: 'Amenity grade', type: 'text' },
   { key: 'Stabilised', label: 'Stabilised', type: 'bool' },

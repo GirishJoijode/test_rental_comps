@@ -31,9 +31,16 @@ export function getCoordinates(record) {
   return { lat, lng }
 }
 
-// Human-readable search query: Scheme, Town, Regional_Filter, Operator.
+// Human-readable search query: Scheme, Town, PostCode, Regional_Filter, Operator.
+// Used only for the free Google Maps search fallback — not for map marker placement.
 export function buildLocationQuery(record) {
-  return [record?.Scheme, record?.Town, record?.Regional_Filter, record?.Operator]
+  return [
+    record?.Scheme,
+    record?.Town,
+    record?.PostCode,
+    record?.Regional_Filter,
+    record?.Operator,
+  ]
     .map((part) => (part == null ? '' : String(part).trim()))
     .filter(Boolean)
     .join(', ')
