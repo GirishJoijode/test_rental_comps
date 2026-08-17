@@ -148,14 +148,12 @@ used if present, otherwise an **approximate** location is fetched from free OSM
 Nominatim (no API key) and cached in-memory for the session; if that fails a
 clean Google Maps search fallback is shown.
 
-## Environment variable for the Ninox URL
+## Environment variables for Ninox URLs
 
-`dataSource.js` reads `import.meta.env.VITE_NINOX_URL` and falls back to the
-hard-coded default. To override, create a `.env` file:
+- Rental Comparables: `src/config/dataSource.js` → `import.meta.env.VITE_RENTAL_COMPS_URL`
+- Operational Costs: `src/modules/operational-costs/config/dataSource.js` → `import.meta.env.VITE_OPERATIONAL_COSTS_URL`
 
-```
-VITE_NINOX_URL=https://savills.ninoxdb.com/share/...
-```
+Set both in `.env.local` for local development. Production builds use GitHub Actions repository secrets of the same names.
 
 ## Theme
 

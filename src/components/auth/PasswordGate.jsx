@@ -13,14 +13,21 @@ export default function PasswordGate({ onSuccess }) {
     inputRef.current?.focus()
   }, [])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!verifyPassword(password)) {
-      setError('Incorrect password. Please try again.')
-      return
+    try {
+      const ok = await verifyPassword(password)
+      if (!ok) {
+        setError('Incorrect password. Please try again.')
+        return
+      }
+      persistAuthentication()
+      onSuccess()
+    } catch {
+      setError(
+        'Authentication is not configured. Missing VITE_APP_PASSWORD_HASH.',
+      )
     }
-    persistAuthentication()
-    onSuccess()
   }
 
   return (

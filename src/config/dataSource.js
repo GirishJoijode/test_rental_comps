@@ -1,14 +1,18 @@
 // -----------------------------------------------------------------------------
-// Data source configuration
+// Data source configuration — BTR Rental Comparables
 // -----------------------------------------------------------------------------
-// The Ninox shared JSON URL lives here in ONE obvious place.
-//
-// To move it to an environment variable later, create a `.env` file with:
-//   VITE_NINOX_URL=https://...
-// and Vite will pick it up automatically via `import.meta.env.VITE_NINOX_URL`.
+// URL comes from Vite env only (never commit real share URLs):
+//   Local:  .env.local → VITE_RENTAL_COMPS_URL
+//   CI:     GitHub Actions secret → VITE_RENTAL_COMPS_URL
 // -----------------------------------------------------------------------------
 
-const DEFAULT_NINOX_URL =
-  'https://savills.ninoxdb.com/share/na75mz3581lj9w4isquh9j1ycwbn1dbqr3qs?locale=en-gb&utcoffset=60'
+const url = import.meta.env.VITE_RENTAL_COMPS_URL
 
-export const NINOX_URL = import.meta.env.VITE_NINOX_URL || DEFAULT_NINOX_URL
+if (!url || typeof url !== 'string' || !url.trim()) {
+  throw new Error(
+    'Missing required environment variable: VITE_RENTAL_COMPS_URL. ' +
+      'Set it in .env.local for local development, or as a GitHub Actions secret for production builds.',
+  )
+}
+
+export const NINOX_URL = url.trim()

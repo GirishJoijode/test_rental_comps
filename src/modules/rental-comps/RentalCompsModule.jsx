@@ -13,7 +13,7 @@ import {
   hasAnyFilterSelection,
   sanitizeFilters,
 } from '../../utils/filters'
-import { latestPerScheme } from '../../utils/dateUtils'
+import { groupByScheme } from '../../utils/dateUtils'
 import { buildSummary } from '../../utils/analysis'
 import { exportToXlsx } from '../../utils/exportXlsx'
 import ModuleSwitcher from '../ModuleSwitcher'
@@ -40,7 +40,11 @@ export default function RentalCompsModule({
     () => applyFilters(records, filters, search),
     [records, filters, search]
   )
-  const rows = useMemo(() => latestPerScheme(filtered), [filtered])
+  const schemeGroups = useMemo(() => groupByScheme(filtered), [filtered])
+  const rows = useMemo(
+    () => schemeGroups.map((entries) => entries[0]),
+    [schemeGroups]
+  )
   const summary = useMemo(() => buildSummary(filtered), [filtered])
 
   const isFiltering = search.trim() !== '' || hasAnyFilterSelection(filters)
@@ -152,7 +156,7 @@ export default function RentalCompsModule({
 
         {status === 'ready' && tab === 'map' && (
           <MapView
-            records={rows}
+            schemeGroups={schemeGroups}
             selectedIds={selectedIds}
             onToggleRow={toggleRow}
             onRowClick={setActiveRecord}

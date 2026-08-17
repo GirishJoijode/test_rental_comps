@@ -98,19 +98,31 @@ function schemeGroupKey(rec, index) {
   return isBlank(rec.Scheme) ? `__row_${index}` : String(rec.Scheme).trim().toLowerCase()
 }
 
+// Group records by Scheme, with each group's entries sorted latest Date_Filter
+// first (chronological rank, not alphabetical). First-seen scheme order is
+// preserved. Dashboard (latest row) and Map View (latest valid coordinates)
+// both consume this single derivation.
+export function groupByScheme(records) {
+  const groups = new Map()
+  records.forEach((rec, index) => {
+    const key = schemeGroupKey(rec, index)
+    const existing = groups.get(key)
+    if (existing) existing.push(rec)
+    else groups.set(key, [rec])
+  })
+  const list = []
+  for (const entries of groups.values()) {
+    entries.sort((a, b) => compareDateFilterDesc(a.Date_Filter, b.Date_Filter))
+    list.push(entries)
+  }
+  return list
+}
+
 // Reduce records to the most recent Date_Filter entry per Scheme. Used for the
 // default export so a scheme that appears across several periods is exported
 // once at its latest period. First-seen order is preserved.
 export function latestPerScheme(records) {
-  const best = new Map()
-  records.forEach((rec, index) => {
-    const key = schemeGroupKey(rec, index)
-    const rank = dateFilterRank(rec.Date_Filter)
-    const score = rank === null ? -Infinity : rank
-    const existing = best.get(key)
-    if (!existing || score > existing.score) best.set(key, { rec, score })
-  })
-  return Array.from(best.values()).map((b) => b.rec)
+  return groupByScheme(records).map((entries) => entries[0])
 }
 
 // All records for the same Scheme as `record`, sorted latest Date_Filter first.

@@ -441,6 +441,7 @@ body {
 .app-main {
   flex: 1;
   min-height: 0;
+  min-width: 0;
   width: 100%;
   max-width: 1320px;
   margin: 0 auto;
@@ -452,6 +453,7 @@ body {
 .tab-panel {
   flex: 1;
   min-height: 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
@@ -889,6 +891,10 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
 }
+.chart-scroll--matrix {
+  overflow: auto;
+}
+
 .chart-empty {
   height: 100%;
   display: flex;
@@ -1040,6 +1046,28 @@ body {
 .data-table tbody tr.is-selected td.is-sticky,
 .data-table tbody tr.is-selected td.is-sticky-check {
   background: var(--yellow-soft);
+}
+
+.data-table.opex-matrix th.is-sticky,
+.data-table.opex-matrix td.is-sticky {
+  left: 0;
+  z-index: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 1px 0 0 var(--line-soft);
+}
+.data-table.opex-matrix thead th.is-sticky {
+  z-index: 5;
+  white-space: nowrap;
+}
+.data-table.opex-matrix td.is-sticky {
+  white-space: nowrap;
+}
+.data-table.opex-matrix tbody tr:nth-child(even) td.is-sticky {
+  background: #fafbfc;
+}
+.data-table.opex-matrix tbody tr:hover td.is-sticky {
+  background: #f0f1f7;
 }
 
 .table-empty {
@@ -1982,11 +2010,18 @@ body {
 
 /* ---- Operational Costs Analysis ---- */
 .opex-analysis-panel {
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
 }
 .opex-analysis-panel .analysis-grid {
   flex: none;
   height: auto;
+  width: 100%;
+  max-width: 100%;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-template-rows: none;
   grid-auto-rows: minmax(300px, 34vh);
 }
@@ -1998,6 +2033,19 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  min-width: 0;
+}
+.opex-analysis-block__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.opex-analysis-block__head .opex-analysis-block__title {
+  padding-bottom: 0;
+  border-bottom: none;
 }
 .opex-analysis-block__title {
   margin: 0;
@@ -2009,11 +2057,79 @@ body {
   padding-bottom: 0.35rem;
   border-bottom: 1px solid var(--line);
 }
+.opex-matrix-panel {
+  min-height: 280px;
+  min-width: 0;
+  max-width: 100%;
+}
+.opex-matrix-panel__body {
+  padding: 0;
+  max-height: 52vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-width: 0;
+}
+.opex-matrix-wrap {
+  min-width: 0;
+  max-width: 100%;
+}
+.opex-matrix {
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+  font-size: 0.8rem;
+  white-space: normal;
+}
+.opex-matrix__col-name {
+  width: 16%;
+}
+.opex-matrix__col-cat,
+.opex-matrix__col-total {
+  width: 10.5%;
+}
+.opex-matrix th,
+.opex-matrix td {
+  padding: 0.45rem 0.4rem;
+}
+.opex-matrix td {
+  white-space: nowrap;
+}
+.opex-matrix thead th {
+  white-space: normal;
+  overflow-wrap: break-word;
+  hyphens: manual;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  vertical-align: middle;
+  padding: 0.55rem 0.35rem;
+  overflow: hidden;
+}
+.opex-matrix thead th.is-center,
+.opex-matrix td.is-center {
+  text-align: center;
+}
+.opex-matrix__total {
+  font-weight: 600;
+}
 .opex-analysis-panel .opex-analysis-block .analysis-grid {
   flex: none;
   height: auto;
   min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-auto-rows: minmax(280px, 32vh);
+}
+.opex-analysis-panel .chart-card {
+  min-width: 0;
+  max-width: 100%;
+}
+.opex-analysis-panel .chart-card .panel__body {
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
 }
 .opex-core-kpis {
   min-height: 0 !important;
@@ -2024,6 +2140,36 @@ body {
   flex: none;
   display: grid;
   gap: 0.75rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Summary mode: consume leftover viewport height instead of growing the page.
+   Chart rows flex equally; long category lists keep scrolling inside cards. */
+.opex-analysis-panel--summary {
+  overflow: hidden;
+  gap: 0.75rem;
+}
+.opex-analysis-panel--summary .opex-analysis-block--fill {
+  flex: 1 1 0;
+  min-height: 0;
+}
+.opex-analysis-panel--summary .opex-analysis-block--fill .analysis-grid {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  grid-auto-rows: minmax(0, 1fr);
+}
+.opex-analysis-panel--summary .opex-analysis-block--fill .chart-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.opex-analysis-panel--summary .opex-analysis-block--fill .chart-card .panel__body {
+  flex: 1;
+  min-height: 0;
 }
 .opex-kpi-grid--8,
 .opex-kpi-grid--4 {
@@ -2191,5 +2337,12 @@ body {
   }
   .opex-analysis-panel .segmented {
     flex-wrap: wrap;
+  }
+  .opex-analysis-block__head {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .opex-matrix-panel__body {
+    overflow-x: auto;
   }
 }

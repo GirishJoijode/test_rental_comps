@@ -25,12 +25,13 @@ export default function GroupCompositionChart({
   groupField,
   groupLabel,
   basis,
+  data: dataProp,
   className = 'col-span-3',
 }) {
   const [viewportRef, viewportH] = useViewportHeight()
   const data = useMemo(
-    () => buildCompositionByGroup(records, groupField, basis),
-    [records, groupField, basis]
+    () => dataProp ?? buildCompositionByGroup(records, groupField, basis),
+    [dataProp, records, groupField, basis]
   )
   const layout = horizontalBarLayout(data.length, { stacked: true })
   const contentH = Math.max(180, data.length * layout.rowBand + 40)

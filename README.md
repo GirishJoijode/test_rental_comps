@@ -30,17 +30,12 @@ Built with **React + Vite + JavaScript** (no TypeScript).
 
 ## Configuration
 
-The Ninox JSON URL lives in **one place**:
-[`src/config/dataSource.js`](src/config/dataSource.js).
+Ninox share URLs are supplied via Vite environment variables (never committed):
 
-To move it to an environment variable later, create a `.env` file:
+- `VITE_RENTAL_COMPS_URL` — read in [`src/config/dataSource.js`](src/config/dataSource.js)
+- `VITE_OPERATIONAL_COSTS_URL` — read in [`src/modules/operational-costs/config/dataSource.js`](src/modules/operational-costs/config/dataSource.js)
 
-```bash
-VITE_NINOX_URL=https://savills.ninoxdb.com/share/...
-```
-
-Vite reads `import.meta.env.VITE_NINOX_URL` automatically; the value in
-`dataSource.js` is used as the fallback default.
+Locally, put both in `.env.local` (gitignored). GitHub Pages builds receive them from repository secrets in `.github/workflows/deploy.yml`.
 
 The Vite `base` is set to `'./'` (relative paths), so the build works under any
 GitHub Pages sub-path without further configuration.

@@ -1,11 +1,11 @@
 // -----------------------------------------------------------------------------
 // Map View tab
 // -----------------------------------------------------------------------------
-// Plots the same (already filtered, latest-per-scheme) rows that the table shows,
-// using the Latitude / Longitude supplied by the data source. No geocoding, no
-// address lookups, no caching — coordinates are read straight from each record
-// via getCoordinates(). Markers feed the SAME global selection + detail modal as
-// the table, so the three tabs stay in sync.
+// One marker per Scheme, using the already-prepared schemeGroups from the
+// module (same grouping as the Dashboard table). Coordinates come from the
+// latest Date_Filter record that has valid lat/lng; the marker identity /
+// popup / selection still use the latest scheme row so tabs stay in sync.
+// No geocoding, no regrouping of the full rental dataset.
 // -----------------------------------------------------------------------------
 import { useEffect, useMemo } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
@@ -59,19 +59,31 @@ function FitBounds({ signature, bounds }) {
   return null
 }
 
-export default function MapView({ records, selectedIds, onToggleRow, onRowClick, onClearSelection }) {
-  // Read coordinates once per filtered set. Records without usable lat/lng are
-  // skipped (never plotted) and counted as "unplotted".
+export default function MapView({
+  schemeGroups,
+  selectedIds,
+  onToggleRow,
+  onRowClick,
+  onClearSelection,
+}) {
+  // Walk already-grouped scheme histories only. Identity stays on the latest
+  // Dashboard row; placement uses the most recent period with valid coords.
   const points = useMemo(() => {
     const out = []
-    for (const rec of records) {
-      const coords = getCoordinates(rec)
-      if (coords) out.push({ id: rec.Id, rec, lat: coords.lat, lng: coords.lng })
+    for (const entries of schemeGroups) {
+      const latest = entries[0]
+      if (!latest) continue
+      let coords = null
+      for (const rec of entries) {
+        coords = getCoordinates(rec)
+        if (coords) break
+      }
+      if (coords) out.push({ id: latest.Id, rec: latest, lat: coords.lat, lng: coords.lng })
     }
     return out
-  }, [records])
+  }, [schemeGroups])
 
-  const unplotted = records.length - points.length
+  const unplotted = schemeGroups.length - points.length
   const signature = useMemo(() => points.map((p) => p.id).join('|'), [points])
   const bounds = useMemo(
     () => (points.length ? L.latLngBounds(points.map((p) => [p.lat, p.lng])) : null),

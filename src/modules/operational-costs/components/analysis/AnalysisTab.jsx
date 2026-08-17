@@ -6,12 +6,14 @@ import {
 } from '../../utils/analysis'
 import AnalysisKPIs from './AnalysisKPIs'
 import CostBasisToggle from './CostBasisToggle'
-import GroupCompositionChart from './GroupCompositionChart'
+import GroupBreakdownSection from './GroupBreakdownSection'
 import GroupOpexChart from './GroupOpexChart'
 
-function AnalysisSection({ title, children, chartGrid = true }) {
+function AnalysisSection({ title, children, chartGrid = true, fill = false }) {
   return (
-    <section className="opex-analysis-block">
+    <section
+      className={`opex-analysis-block${fill ? ' opex-analysis-block--fill' : ''}`}
+    >
       <h2 className="opex-analysis-block__title">{title}</h2>
       {chartGrid ? (
         <div className="analysis-grid opex-analysis-grid">{children}</div>
@@ -46,7 +48,11 @@ export default function AnalysisTab({
   )
 
   return (
-    <div className="tab-panel analysis-panel opex-analysis-panel">
+    <div
+      className={`tab-panel analysis-panel opex-analysis-panel${
+        isSummary ? ' opex-analysis-panel--summary' : ''
+      }`}
+    >
       <div className="analysis-toolbar">
         <span className="analysis-toolbar__label">Cost basis</span>
         <CostBasisToggle value={basis} onChange={onBasisChange} />
@@ -61,9 +67,9 @@ export default function AnalysisTab({
         <AnalysisKPIs cards={coreCards} columns={isSummary ? 4 : 3} />
       </AnalysisSection>
 
-      <AnalysisSection title="By Region">
-        {isSummary ? (
-          <>
+      {isSummary ? (
+        <>
+          <AnalysisSection title="By Region" fill>
             <GroupOpexChart
               records={records}
               groupField="Region"
@@ -82,30 +88,9 @@ export default function AnalysisTab({
               title="Average OpEx / Sq Ft by Region"
               subtitle="Headline regional comparison · £ / Sq Ft"
             />
-          </>
-        ) : (
-          <>
-            <GroupOpexChart
-              records={records}
-              groupField="Region"
-              groupLabel="Region"
-              basis={costBasis}
-              className="col-span-3"
-            />
-            <GroupCompositionChart
-              records={records}
-              groupField="Region"
-              groupLabel="Region"
-              basis={costBasis}
-              className="col-span-3"
-            />
-          </>
-        )}
-      </AnalysisSection>
+          </AnalysisSection>
 
-      <AnalysisSection title="By Location">
-        {isSummary ? (
-          <>
+          <AnalysisSection title="By Location" fill>
             <GroupOpexChart
               records={records}
               groupField="Location"
@@ -124,26 +109,26 @@ export default function AnalysisTab({
               title="Average OpEx / Sq Ft by Location"
               subtitle="Headline location comparison · £ / Sq Ft"
             />
-          </>
-        ) : (
-          <>
-            <GroupOpexChart
-              records={records}
-              groupField="Location"
-              groupLabel="Location"
-              basis={costBasis}
-              className="col-span-3"
-            />
-            <GroupCompositionChart
-              records={records}
-              groupField="Location"
-              groupLabel="Location"
-              basis={costBasis}
-              className="col-span-3"
-            />
-          </>
-        )}
-      </AnalysisSection>
+          </AnalysisSection>
+        </>
+      ) : (
+        <>
+          <GroupBreakdownSection
+            title="By Region"
+            groupField="Region"
+            groupLabel="Region"
+            records={records}
+            costBasis={costBasis}
+          />
+          <GroupBreakdownSection
+            title="By Location"
+            groupField="Location"
+            groupLabel="Location"
+            records={records}
+            costBasis={costBasis}
+          />
+        </>
+      )}
     </div>
   )
 }

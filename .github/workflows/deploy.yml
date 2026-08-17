@@ -25,8 +25,14 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm install
-      - run: npm run build
+      - name: Build
+        run: npm run build
+        env:
+          VITE_RENTAL_COMPS_URL: ${{ secrets.VITE_RENTAL_COMPS_URL }}
+          VITE_OPERATIONAL_COSTS_URL: ${{ secrets.VITE_OPERATIONAL_COSTS_URL }}
+          VITE_APP_PASSWORD_HASH: ${{ secrets.VITE_APP_PASSWORD_HASH }}
       - uses: actions/upload-pages-artifact@v3
+
         with:
           path: dist
 
